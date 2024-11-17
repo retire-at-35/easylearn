@@ -1,6 +1,6 @@
 package com.easylearn.service;
 
-import com.easylearn.pojo.Tmtype;
+import com.easylearn.pojo.entity.Tmtype;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

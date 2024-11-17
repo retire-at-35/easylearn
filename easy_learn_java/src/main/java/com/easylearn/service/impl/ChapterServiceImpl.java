@@ -1,7 +1,7 @@
 package com.easylearn.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.easylearn.pojo.Chapter;
+import com.easylearn.pojo.entity.Chapter;
 import com.easylearn.service.ChapterService;
 import com.easylearn.mapper.ChapterMapper;
 import org.springframework.stereotype.Service;

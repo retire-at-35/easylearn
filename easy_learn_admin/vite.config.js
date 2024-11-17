@@ -18,11 +18,32 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
+  server: {
+    hmr: true,
+    port: 5173,
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080/",
+        changeOrigin: true,
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  css: {
+    loaderOptions: {
+      sass: {
+        prependData:   // 8版本用prependData:
+        `
+          @import "@/styles/variables.scss";  // scss文件地址
+          @import "@/styles/mixin.scss";     // scss文件地址
+        `
+      }
+    }
+  }
 })
 
 

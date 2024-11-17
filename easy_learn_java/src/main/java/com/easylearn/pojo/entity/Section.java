@@ -1,4 +1,4 @@
-package com.easylearn.pojo;
+package com.easylearn.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,26 +9,31 @@ import lombok.Data;
 
 /**
  * 
- * @TableName role
+ * @TableName section
  */
-@TableName(value ="role")
+@TableName(value ="section")
 @Data
-public class Role implements Serializable {
+public class Section implements Serializable {
     /**
      * 
      */
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Integer sid;
 
     /**
      * 
      */
-    private Integer userId;
+    private Integer cid;
 
     /**
      * 
      */
-    private String rolename;
+    private String name;
+
+    /**
+     * 
+     */
+    private Integer pos;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -44,19 +49,21 @@ public class Role implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        Role other = (Role) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getRolename() == null ? other.getRolename() == null : this.getRolename().equals(other.getRolename()));
+        Section other = (Section) that;
+        return (this.getSid() == null ? other.getSid() == null : this.getSid().equals(other.getSid()))
+            && (this.getCid() == null ? other.getCid() == null : this.getCid().equals(other.getCid()))
+            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+            && (this.getPos() == null ? other.getPos() == null : this.getPos().equals(other.getPos()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
-        result = prime * result + ((getRolename() == null) ? 0 : getRolename().hashCode());
+        result = prime * result + ((getSid() == null) ? 0 : getSid().hashCode());
+        result = prime * result + ((getCid() == null) ? 0 : getCid().hashCode());
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+        result = prime * result + ((getPos() == null) ? 0 : getPos().hashCode());
         return result;
     }
 
@@ -66,9 +73,10 @@ public class Role implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
-        sb.append(", rolename=").append(rolename);
+        sb.append(", sid=").append(sid);
+        sb.append(", cid=").append(cid);
+        sb.append(", name=").append(name);
+        sb.append(", pos=").append(pos);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

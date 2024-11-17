@@ -1,29 +1,37 @@
-package com.easylearn.pojo;
+package com.easylearn.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+
+import lombok.Builder;
 import lombok.Data;
 
 /**
  * 
- * @TableName tmtype
+ * @TableName role
  */
-@TableName(value ="tmtype")
+@TableName(value ="role")
 @Data
-public class Tmtype implements Serializable {
+@Builder
+public class Role implements Serializable {
     /**
      * 
      */
     @TableId(type = IdType.AUTO)
-    private Integer tid;
+    private Integer id;
 
     /**
      * 
      */
-    private String name;
+    private Integer userId;
+
+    /**
+     * 
+     */
+    private String rolename;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -39,17 +47,19 @@ public class Tmtype implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        Tmtype other = (Tmtype) that;
-        return (this.getTid() == null ? other.getTid() == null : this.getTid().equals(other.getTid()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()));
+        Role other = (Role) that;
+        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+            && (this.getRolename() == null ? other.getRolename() == null : this.getRolename().equals(other.getRolename()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getTid() == null) ? 0 : getTid().hashCode());
-        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
+        result = prime * result + ((getRolename() == null) ? 0 : getRolename().hashCode());
         return result;
     }
 
@@ -59,8 +69,9 @@ public class Tmtype implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", tid=").append(tid);
-        sb.append(", name=").append(name);
+        sb.append(", id=").append(id);
+        sb.append(", userId=").append(userId);
+        sb.append(", rolename=").append(rolename);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

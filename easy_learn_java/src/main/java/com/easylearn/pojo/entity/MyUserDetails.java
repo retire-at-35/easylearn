@@ -1,7 +1,5 @@
-package com.easylearn.pojo;
+package com.easylearn.pojo.entity;
 
-import com.easylearn.pojo.Role;
-import com.easylearn.pojo.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MyUserDetails extends User implements UserDetails {
+public class MyUserDetails extends Users implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<SimpleGrantedAuthority> lists=new ArrayList<>();
 
-        for(Role role :getRoles()){
-            SimpleGrantedAuthority authority=new SimpleGrantedAuthority(role.getRoleName());
+        for(Role role :getRoleList()){
+            SimpleGrantedAuthority authority=new SimpleGrantedAuthority(role.getRolename());
             lists.add(authority);
         }
 
@@ -26,22 +24,22 @@ public class MyUserDetails extends User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
 

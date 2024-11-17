@@ -1,4 +1,4 @@
-package com.easylearn.pojo;
+package com.easylearn.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,21 +9,26 @@ import lombok.Data;
 
 /**
  * 
- * @TableName chapter
+ * @TableName options
  */
-@TableName(value ="chapter")
+@TableName(value ="options")
 @Data
-public class Chapter implements Serializable {
+public class Options implements Serializable {
     /**
      * 
      */
     @TableId(type = IdType.AUTO)
-    private Integer cid;
+    private Integer oid;
 
     /**
      * 
      */
-    private String name;
+    private Integer qid;
+
+    /**
+     * 
+     */
+    private String op;
 
     /**
      * 
@@ -44,9 +49,10 @@ public class Chapter implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        Chapter other = (Chapter) that;
-        return (this.getCid() == null ? other.getCid() == null : this.getCid().equals(other.getCid()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+        Options other = (Options) that;
+        return (this.getOid() == null ? other.getOid() == null : this.getOid().equals(other.getOid()))
+            && (this.getQid() == null ? other.getQid() == null : this.getQid().equals(other.getQid()))
+            && (this.getOp() == null ? other.getOp() == null : this.getOp().equals(other.getOp()))
             && (this.getPos() == null ? other.getPos() == null : this.getPos().equals(other.getPos()));
     }
 
@@ -54,8 +60,9 @@ public class Chapter implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getCid() == null) ? 0 : getCid().hashCode());
-        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+        result = prime * result + ((getOid() == null) ? 0 : getOid().hashCode());
+        result = prime * result + ((getQid() == null) ? 0 : getQid().hashCode());
+        result = prime * result + ((getOp() == null) ? 0 : getOp().hashCode());
         result = prime * result + ((getPos() == null) ? 0 : getPos().hashCode());
         return result;
     }
@@ -66,8 +73,9 @@ public class Chapter implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", cid=").append(cid);
-        sb.append(", name=").append(name);
+        sb.append(", oid=").append(oid);
+        sb.append(", qid=").append(qid);
+        sb.append(", op=").append(op);
         sb.append(", pos=").append(pos);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

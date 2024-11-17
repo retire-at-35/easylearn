@@ -1,6 +1,6 @@
 package com.easylearn.service;
 
-import com.easylearn.pojo.Users;
+import com.easylearn.pojo.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UsersService extends IService<Users> {
 
+    public Users byUsername(String username);
+
+    void RegUser(Users user, String roleUser);
 }

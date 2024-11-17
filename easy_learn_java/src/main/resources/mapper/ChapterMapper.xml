@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.easylearn.mapper.ChapterMapper">
 
-    <resultMap id="BaseResultMap" type="com.easylearn.pojo.Chapter">
+    <resultMap id="BaseResultMap" type="com.easylearn.pojo.entity.Chapter">
             <id property="cid" column="cid" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="pos" column="pos" jdbcType="INTEGER"/>

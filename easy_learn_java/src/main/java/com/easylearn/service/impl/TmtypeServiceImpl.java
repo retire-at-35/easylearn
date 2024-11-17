@@ -1,7 +1,7 @@
 package com.easylearn.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.easylearn.pojo.Tmtype;
+import com.easylearn.pojo.entity.Tmtype;
 import com.easylearn.service.TmtypeService;
 import com.easylearn.mapper.TmtypeMapper;
 import org.springframework.stereotype.Service;

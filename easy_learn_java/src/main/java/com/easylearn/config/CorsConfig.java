@@ -1,19 +1,37 @@
 package com.easylearn.config;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class CorsConfig implements WebMvcConfigurer {
-    //使用CTRL+O 打开需要实现的接口方法
+import java.io.IOException;
+
+@Component
+@Slf4j
+public class CorsConfig implements Filter {
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        WebMvcConfigurer.super.addCorsMappings(registry);
-        registry.addMapping("/**")
-//                .allowedOrigins("*")
-                .allowedOrigins("http://localhost:5173")
-                .allowCredentials(true);
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        //log.error("我被注入啦！");
+        HttpServletResponse response = (HttpServletResponse) res;
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");//不可以传*
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, HEAD,PUT");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "access-control-allow-origin, authority, content-type, version-info, X-Requested-With");
+        response.setHeader("Access-Control-Allow-Credentials", "true");//这行是关键
+        HttpServletRequest request = (HttpServletRequest)req;
+        if ("OPTIONS".equals(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);//解决预处理
+            return;
+        }
+        chain.doFilter(req, res);
     }
+    @Override
+    public void init(FilterConfig filterConfig) {}
+
+    @Override
+    public void destroy() {}
+
 }

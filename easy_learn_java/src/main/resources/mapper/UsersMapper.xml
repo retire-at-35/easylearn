@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.easylearn.mapper.UsersMapper">
 
-    <resultMap id="BaseResultMap" type="com.easylearn.pojo.Users">
+    <resultMap id="BaseResultMap" type="com.easylearn.pojo.entity.Users">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>

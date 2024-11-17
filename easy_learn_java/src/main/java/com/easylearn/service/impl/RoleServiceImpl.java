@@ -1,7 +1,7 @@
 package com.easylearn.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.easylearn.pojo.Role;
+import com.easylearn.pojo.entity.Role;
 import com.easylearn.service.RoleService;
 import com.easylearn.mapper.RoleMapper;
 import org.springframework.stereotype.Service;
