@@ -17,15 +17,15 @@ public class CorsConfig implements Filter {
         //log.error("我被注入啦！");
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");//不可以传*
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, HEAD,PUT");
+        response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "access-control-allow-origin, authority, content-type, version-info, X-Requested-With");
         response.setHeader("Access-Control-Allow-Credentials", "true");//这行是关键
         HttpServletRequest request = (HttpServletRequest)req;
-        if ("OPTIONS".equals(request.getMethod())) {
-            response.setStatus(HttpServletResponse.SC_OK);//解决预处理
-            return;
-        }
+//        if ("OPTIONS".equals(request.getMethod())) {
+//            response.setStatus(HttpServletResponse.SC_OK);//解决预处理
+//            return;
+//        }
         chain.doFilter(req, res);
     }
     @Override

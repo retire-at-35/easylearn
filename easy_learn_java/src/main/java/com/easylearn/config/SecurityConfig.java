@@ -9,6 +9,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -34,7 +39,18 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 允许的前端域名
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     //授权
     @Bean
@@ -48,11 +64,11 @@ public class SecurityConfig {
         });
 
         //允许前端post方式提交
-        //跨站请求伪造（ Cross-site request forgery）
         http.csrf(c -> c.disable());
-//        http.cors(withDefaults());
+        // 配置cors
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        
         //返回构建的对象
         return http.build();
     }
-
 }

@@ -13,10 +13,11 @@
         background-color="#304156"
         text-color="#bfcbd9"
         active-text-color="#409EFF"
+        router
       >
-        <el-menu-item index="/user">
+        <el-menu-item v-if="isSuper" index="/user">
           <el-icon><user /></el-icon>
-          <template #title>用户管理</template>
+          <template #title >用户管理</template>
         </el-menu-item>
 
         <el-sub-menu index="/directory">
@@ -51,8 +52,8 @@
             <component :is="isCollapse ? 'Expand' : 'Fold'" />
           </el-icon>
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+            <!-- <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item> -->
+            <el-breadcrumb-item>{{ route.meta.title || '活动管理' }}</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
         <div class="header-right">
@@ -70,10 +71,10 @@
           </el-dropdown>
         </div>
       </el-header>
-
+-
       <!-- 主要内容区域 -->
       <el-main class="main-container">
-        <router-view v-slot="{ Component }">
+        <router-view  v-slot="{ Component }">
           <transition name="fade-transform" mode="out-in">
             <component :is="Component" />
           </transition>
@@ -92,7 +93,6 @@ import { useUserStore } from '@/stores/user'
 
 const isCollapse = ref(false)
 const route = useRoute()
-
 const activeMenu = computed(() => route.path)
 
 const toggleCollapse = () => {
@@ -101,7 +101,9 @@ const toggleCollapse = () => {
 
 const router = useRouter()
 const userStore = useUserStore()
-
+const isSuper = computed(() => {
+  return userStore.userInfo?.roleList.some(role => role.roleName === 'ROLE_superadmin')
+})
 const handleLogout = () => {
   ElMessageBox.confirm(
     '确认退出登录吗？',

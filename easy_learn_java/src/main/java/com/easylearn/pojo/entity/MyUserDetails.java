@@ -15,7 +15,8 @@ public class MyUserDetails extends Users implements UserDetails {
         List<SimpleGrantedAuthority> lists=new ArrayList<>();
 
         for(Role role :getRoleList()){
-            SimpleGrantedAuthority authority=new SimpleGrantedAuthority(role.getRolename());
+            System.err.println(role.getRoleName());
+            SimpleGrantedAuthority authority=new SimpleGrantedAuthority(role.getRoleName());
             lists.add(authority);
         }
 

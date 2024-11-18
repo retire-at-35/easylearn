@@ -20,9 +20,9 @@ class EasyLearnJavaApplicationTests {
     void reg(){
         BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
         Users user=new Users();
-        user.setUsername("cccc");
+        user.setUsername("jjjj");
         user.setPassword( encoder.encode( "123456"));
-        userService.RegUser(user,"role_admin");
+        userService.RegUser(user,"role_superadmin");
 
     }
 

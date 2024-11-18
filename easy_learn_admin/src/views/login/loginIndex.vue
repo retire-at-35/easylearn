@@ -13,7 +13,7 @@
       <!-- 右侧登录表单 -->
       <div class="login-form">
         <div class="form-header">
-          <img src="@/assets/logo.png" alt="logo" class="logo">
+          <!-- <img src="@/assets/logo.png" alt="logo" class="logo"> -->
           <h3>账号登录</h3>
         </div>
 
@@ -109,6 +109,7 @@ const loginRules = {
 
 const login =async () => {
   const res = await loginAPI(loginForm)
+  console.log(res);
   userStore.setUserInfo(res)
 }
 
@@ -118,7 +119,6 @@ const handleLogin = () => {
       loading.value = true;
       try {
         login(loginForm);
-        ElMessage.success('登录成功');
         router.push('/');
       } catch (error) {
         console.log('登录失败', error);

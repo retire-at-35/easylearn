@@ -1,5 +1,5 @@
 package com.easylearn.service.impl;
-import com.easylearn.constant.SessionCode;
+import com.easylearn.constant.Constant;
 import com.easylearn.pojo.dto.UserDto;
 import com.easylearn.pojo.entity.MyUserDetails;
 import com.easylearn.pojo.entity.Users;
@@ -23,10 +23,7 @@ public class LoginServiceImpl implements LoginService {
     AuthenticationManager manager;
     public UserDto login(Users user, HttpSession session)  {
         // 先验证验证码
-//        String code = (String)session.getAttribute(SessionCode.CHECK_CODE);
-//        System.err.println("验证码为"+code);
-//        System.err.println("正确验证码为"+user.getCheckCode());
-        if (!user.getCheckCode().equals(session.getAttribute(SessionCode.CHECK_CODE))) {
+        if (!user.getCheckCode().equals(session.getAttribute(Constant.CHECK_CODE))) {
             throw new RuntimeException("验证码错误");
         }
         UsernamePasswordAuthenticationToken uToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());

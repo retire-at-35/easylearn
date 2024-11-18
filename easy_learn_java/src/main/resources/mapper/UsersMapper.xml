@@ -13,4 +13,8 @@
     <sql id="Base_Column_List">
         id,username,password
     </sql>
+
+    <select id="findByRole" resultType="com.easylearn.pojo.entity.Users">
+        SELECT * FROM users WHERE role = #{role}
+    </select>
 </mapper>
