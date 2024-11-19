@@ -35,7 +35,12 @@ instance.interceptors.response.use(
         const router = useRouter();
         router.push('/login');
         ElMessage.error('未登录或登录已过期，请重新登录');
-      } else {
+      }
+      else if (response.status === 403) {
+        // 未授权：弹出提示信息
+        ElMessage.error('权限不足');
+      }
+      else {
         // 其他 HTTP 错误：弹出状态码和提示信息
         ElMessage.error(`HTTP 错误：${response.status} - ${response.statusText}`);
       }

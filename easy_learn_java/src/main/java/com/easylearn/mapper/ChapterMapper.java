@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface ChapterMapper extends BaseMapper<Chapter> {
-
+    // 如果有自定义的分页查询方法
 }
 
 

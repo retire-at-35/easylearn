@@ -29,6 +29,14 @@ const router = createRouter({
           meta: {
             title: '章管理'
           }
+        },
+        {
+          path: 'directory/section',
+          name: 'section',
+          component: () => import('@/views/directory/section.vue'),
+          meta: {
+            title: '节管理'
+          }
         }
       ]
     }

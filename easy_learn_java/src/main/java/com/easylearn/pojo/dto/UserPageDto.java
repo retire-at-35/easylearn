@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserPageDto {
-    int page;
-    int pageSize;
+    Integer page;
+    Integer pageSize;
     String username;
 }

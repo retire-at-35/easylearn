@@ -74,12 +74,13 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { User, Lock, Key } from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { loginAPI } from '@/api/login'
 import { useUserStore } from '@/stores/user'
 const router = useRouter()
+const route = useRoute()
 const loading = ref(false)
 const loginFormRef = ref()
 const userStore = useUserStore()
@@ -118,10 +119,11 @@ const handleLogin = () => {
     if (valid) {
       loading.value = true;
       try {
-        login(loginForm);
+        await login(loginForm);
         router.push('/');
       } catch (error) {
         console.log('登录失败', error);
+        refreshCaptcha()
       } finally {
         loading.value = false;
       }
@@ -129,7 +131,21 @@ const handleLogin = () => {
   });
 };
 
+// 在页面挂载和重新进入登录页时刷新验证码
+onMounted(() => {
+  refreshCaptcha()
+})
 
+// 监听路由变化，当进入登录页时刷新验证码
+watch(
+  () => route.path,
+  (newPath) => {
+    if (newPath === '/login') {
+      refreshCaptcha()
+      loginForm.checkCode = ''
+    }
+  }
+)
 
 const refreshCaptcha = () => {
   captchaUrl.value = `http://localhost:8080/pub/checkCode?t=${new Date().getTime()}`

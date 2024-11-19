@@ -38,6 +38,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     public Users byUsername(String username) {
         LambdaQueryWrapper<Users> uwrapper = new LambdaQueryWrapper<Users>().eq(Users::getUsername, username);
         Users user = usersMapper.selectOne(uwrapper);
+        if(user == null){
+            throw new RuntimeException("用户不存在");
+        }
         LambdaQueryWrapper<Role> rwrapper = new LambdaQueryWrapper<Role>().eq(Role::getUserId, user.getId());
         List<Role> roles = roleMapper.selectList(rwrapper);
         user.setRoleList(roles);
@@ -56,16 +59,16 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
     @Override
     public PageBean getPage(UserPageDto userPageDto) {
+        if(userPageDto.getPage()==null&&userPageDto.getPageSize()==null){
+            userPageDto.setPage(1);
+            userPageDto.setPageSize(10);
+        }
         LambdaQueryWrapper<Users> userWrapper = new LambdaQueryWrapper<>();
         Page<Users> page = new Page<>(userPageDto.getPage(), userPageDto.getPageSize());
         if (StringUtils.hasText(userPageDto.getUsername())) {
             userWrapper.like(Users::getUsername, userPageDto.getUsername());
         }
         Page<Users> pageData = usersMapper.selectPage(page, userWrapper);
-        System.out.println("Total records: " + pageData.getTotal());
-        System.out.println("Current page: " + pageData.getCurrent());
-        System.out.println("Page size: " + pageData.getSize());
-        System.out.println("Records in current page: " + pageData.getRecords().size());
         List<Users> users = pageData.getRecords();
         List<Integer> userIds = new ArrayList<>();
         for (Users user : users) {

@@ -13,4 +13,13 @@
     <sql id="Base_Column_List">
         cid,name,pos
     </sql>
+
+    <select id="selectPageVo" resultType="com.easylearn.pojo.entity.Chapter">
+        SELECT * FROM chapter 
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
 </mapper>

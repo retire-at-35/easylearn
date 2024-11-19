@@ -43,10 +43,4 @@ public class LoginController {
         vCode.write(response.getOutputStream());
     }
 
-    @RequestMapping("/getUser")
-    public Result getByPage(UserPageDto userPageDto){
-        PageBean pageResult = usersService.getPage(userPageDto);
-        return Result.success(pageResult);
-    }
-
 }

@@ -1,5 +1,7 @@
 package com.easylearn.service;
 
+import com.easylearn.pojo.dto.PageBean;
+import com.easylearn.pojo.entity.Chapter;
 import com.easylearn.pojo.entity.Section;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface SectionService extends IService<Section> {
 
+    PageBean pageSearch(Integer page, Integer pageSize, Integer cid, String name);
+
+    void addOne(Section section);
 }

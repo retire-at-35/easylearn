@@ -1,7 +1,11 @@
 package com.easylearn.service;
 
+import com.easylearn.pojo.dto.ChapterPageDto;
+import com.easylearn.pojo.dto.PageBean;
 import com.easylearn.pojo.entity.Chapter;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author 31696
@@ -10,4 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface ChapterService extends IService<Chapter> {
 
+    PageBean getPage(ChapterPageDto pageDto);
+
+    void addOne(Chapter chapter);
+
+    List<Chapter> getAllChapter();
 }
