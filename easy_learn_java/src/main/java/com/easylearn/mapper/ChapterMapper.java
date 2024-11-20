@@ -2,6 +2,7 @@ package com.easylearn.mapper;
 
 import com.easylearn.pojo.entity.Chapter;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @Entity com.easylearn.pojo.entity.Chapter
 */
 @Mapper
-public interface ChapterMapper extends BaseMapper<Chapter> {
+public interface ChapterMapper extends MPJBaseMapper<Chapter> {
     // 如果有自定义的分页查询方法
 }
 

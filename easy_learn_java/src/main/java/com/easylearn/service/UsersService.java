@@ -21,7 +21,6 @@ public interface UsersService extends IService<Users> {
 
     PageBean getPage(UserPageDto userPageDto);
 
-    List<Users> findByRole(String role);
 
     void addOne(Users user);
 

@@ -36,7 +36,7 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter>
         System.err.println(pageDto);
         LambdaQueryWrapper<Chapter> chapterWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasText(pageDto.getName())) {
-            chapterWrapper.like(Chapter::getName, pageDto.getName());
+            chapterWrapper.like(Chapter::getChapterName, pageDto.getName());
         }
         Page<Chapter> pageData = chapterMapper.selectPage(chapterPage, chapterWrapper);
         PageBean pageBean = new PageBean();
@@ -54,7 +54,7 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter>
         if(c1 != null){
             throw new RuntimeException("请检查新增的章节次序");
         }
-        LambdaQueryWrapper<Chapter> nameWrapper = new LambdaQueryWrapper<Chapter>().eq(Chapter::getName, chapter.getName());
+        LambdaQueryWrapper<Chapter> nameWrapper = new LambdaQueryWrapper<Chapter>().eq(Chapter::getChapterName, chapter.getChapterName());
         c1 = chapterMapper.selectOne(nameWrapper);
         if(c1 != null){
             throw new RuntimeException("请检查新增的章节名称");

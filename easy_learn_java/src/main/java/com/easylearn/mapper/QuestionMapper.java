@@ -2,6 +2,8 @@ package com.easylearn.mapper;
 
 import com.easylearn.pojo.entity.Question;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,8 +13,9 @@ import org.apache.ibatis.annotations.Mapper;
 * @Entity com.easylearn.pojo.entity.Question
 */
 @Mapper
-public interface QuestionMapper extends BaseMapper<Question> {
+public interface QuestionMapper extends MPJBaseMapper<Question> {
 
+//    Page<Question> pageQuery(Integer cid, Integer sid, String content, Integer singleQuestionType);
 }
 
 

@@ -29,7 +29,7 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
         Page<Section> sectionPage = new Page<>(page, pageSize);
         LambdaQueryWrapper<Section> lqw = new LambdaQueryWrapper<>();
         if(StringUtils.hasText(name)){
-            lqw.like(Section::getName,name);
+            lqw.like(Section::getSectionName,name);
         }
         if(cid != null){
             lqw.eq(Section::getCid,cid);

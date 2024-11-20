@@ -12,6 +12,7 @@ const router = createRouter({
       path: '/',
       name: 'layout',
       component: () => import('../views/layout/layoutIndex.vue'),
+      redirect: '/directory/chapter',
       children: [
         {
           path: 'user',
@@ -36,6 +37,30 @@ const router = createRouter({
           component: () => import('@/views/directory/section.vue'),
           meta: {
             title: '节管理'
+          }
+        },
+        {
+          path: 'questions/single',
+          name: 'singleQuestion',
+          component: () => import('@/views/questions/single.vue'),
+          meta: {
+            title: '单选题管理'
+          }
+        },
+        {
+          path: 'questions/multiple',
+          name: 'multipleQuestion',
+          component: () => import('@/views/questions/multiple.vue'),
+          meta: {
+            title: '多选题管理'
+          }
+        },
+        {
+          path: 'questions/judge',
+          name: 'judgeQuestion',
+          component: () => import('@/views/questions/judge.vue'),
+          meta: {
+            title: '判断题管理'
           }
         }
       ]

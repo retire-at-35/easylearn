@@ -2,6 +2,7 @@ package com.easylearn.mapper;
 
 import com.easylearn.pojo.entity.Options;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @Entity com.easylearn.pojo.entity.Options
 */
 @Mapper
-public interface OptionsMapper extends BaseMapper<Options> {
+public interface OptionsMapper extends MPJBaseMapper<Options> {
 
 }
 

@@ -1,13 +1,15 @@
 <template>
-  <div class="section-container">
+  <div class="question-container">
     <!-- 顶部操作区 -->
     <div class="operation-area">
       <div class="left-area">
+        <!-- 章选择 -->
         <el-select
           v-model="selectedChapter"
           placeholder="请选择章"
           class="chapter-select"
           @change="handleChapterChange"
+          clearable
         >
           <el-option
             v-for="item in chapterList"
@@ -17,9 +19,26 @@
           />
         </el-select>
 
+        <!-- 节选择 -->
+        <el-select
+          v-model="selectedSection"
+          placeholder="请选择节"
+          class="section-select"
+          :disabled="!selectedChapter"
+          clearable
+        >
+          <el-option
+            v-for="item in sectionList"
+            :key="item.id"
+            :label="item.sectionName"
+            :value="item.id"
+          />
+        </el-select>
+
+        <!-- 题目搜索 -->
         <el-input
           v-model="searchQuery"
-          placeholder="请输入节名称搜索"
+          placeholder="请输入题目名称搜索"
           class="search-input"
           clearable
           @clear="handleSearch"
@@ -33,20 +52,21 @@
 
       <el-button type="primary" @click="handleAdd">
         <el-icon><plus /></el-icon>
-        新增节
+        新增题目
       </el-button>
     </div>
 
-    <!-- 节列表 -->
+    <!-- 题目列表 -->
     <el-table
-      :data="sectionList"
+      :data="questionList"
       style="width: 100%"
       v-loading="loading"
       border
     >
-      <el-table-column prop="id" label="节ID" width="100" align="center" />
-      <el-table-column prop="sectionName" label="节名称" align="center" />
-      <el-table-column prop="sort" label="排序" width="100" align="center" />
+      <el-table-column prop="id" label="题目ID" width="80" align="center" />
+      <el-table-column prop="title" label="题目名称" align="center" />
+      <el-table-column prop="chapterName" label="所属章" align="center" />
+      <el-table-column prop="sectionName" label="所属节" align="center" />
       <el-table-column label="操作" width="200" align="center">
         <template #default="{ row }">
           <el-button
@@ -99,19 +119,20 @@
     <el-dialog
       :title="dialogTitle"
       v-model="dialogVisible"
-      width="500px"
+      width="700px"
     >
       <el-form
-        ref="sectionFormRef"
-        :model="sectionForm"
-        :rules="sectionRules"
+        ref="questionFormRef"
+        :model="questionForm"
+        :rules="questionRules"
         label-width="100px"
       >
         <el-form-item label="所属章" prop="chapterId">
           <el-select
-            v-model="sectionForm.chapterId"
+            v-model="questionForm.chapterId"
             placeholder="请选择所属章"
             class="form-select"
+            @change="handleFormChapterChange"
           >
             <el-option
               v-for="item in chapterList"
@@ -121,11 +142,34 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="节名称" prop="sectionName">
-          <el-input v-model="sectionForm.sectionName" placeholder="请输入节名称" />
+        <el-form-item label="所属节" prop="sectionId">
+          <el-select
+            v-model="questionForm.sectionId"
+            placeholder="请选择所属节"
+            class="form-select"
+            :disabled="!questionForm.chapterId"
+          >
+            <el-option
+              v-for="item in formSectionList"
+              :key="item.id"
+              :label="item.sectionName"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="sectionForm.sort" :min="1" :max="999" />
+        <el-form-item label="题目名称" prop="title">
+          <el-input
+            v-model="questionForm.title"
+            type="textarea"
+            :rows="2"
+            placeholder="请输入题目名称"
+          />
+        </el-form-item>
+        <el-form-item label="正确答案" prop="answer">
+          <el-radio-group v-model="questionForm.answer">
+            <el-radio label="1">正确</el-radio>
+            <el-radio label="0">错误</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -139,14 +183,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { Search, Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAllChapter, getSectionList, addSection } from '@/api/section'
+import { getAllChapter, getSectionList } from '@/api/section'
+import { getJudgeQuestionList, addOrUpdateJudgeQuestion, deleteJudgeQuestion } from '@/api/question'
 
 // 章节选择相关
 const chapterList = ref([])
+const sectionList = ref([])
 const selectedChapter = ref('')
+const selectedSection = ref('')
+const formSectionList = ref([])
 
 // 获取章列表
 const fetchChapterList = async () => {
@@ -157,13 +205,52 @@ const fetchChapterList = async () => {
       chapterName: item.chapterName,
       sort: item.pos
     }))
-    if (chapterList.value.length > 0 && !selectedChapter.value) {
-      selectedChapter.value = chapterList.value[0].id
-      fetchSectionList()
-    }
   } catch (error) {
     console.error('获取章列表失败:', error)
     ElMessage.error('获取章列表失败')
+  }
+}
+
+// 获取节列表
+const fetchSectionList = async (chapterId) => {
+  try {
+    const res = await getSectionList({ cid: chapterId })
+    const sections = res.rows.map(item => ({
+      id: item.sid,
+      sectionName: item.sectionName,
+      sort: item.pos
+    }))
+    if (chapterId === selectedChapter.value) {
+      sectionList.value = sections
+    }
+    if (chapterId === questionForm.chapterId) {
+      formSectionList.value = sections
+    }
+  } catch (error) {
+    console.error('获取节列表失败:', error)
+    ElMessage.error('获取节列表失败')
+  }
+}
+
+// 处理章选择变化
+const handleChapterChange = (val) => {
+  selectedSection.value = ''
+  if (val) {
+    fetchSectionList(val)
+  } else {
+    sectionList.value = []
+  }
+  currentPage.value = 1
+  fetchQuestionList()
+}
+
+// 处理表单中章选择变化
+const handleFormChapterChange = (val) => {
+  questionForm.sectionId = ''
+  if (val) {
+    fetchSectionList(val)
+  } else {
+    formSectionList.value = []
   }
 }
 
@@ -171,7 +258,7 @@ const fetchChapterList = async () => {
 const searchQuery = ref('')
 const handleSearch = () => {
   currentPage.value = 1
-  fetchSectionList()
+  fetchQuestionList()
 }
 
 // 分页相关
@@ -181,96 +268,111 @@ const total = ref(0)
 const handleSizeChange = (val) => {
   pageSize.value = val
   currentPage.value = 1
-  fetchSectionList()
+  fetchQuestionList()
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  fetchSectionList()
+  fetchQuestionList()
 }
 
 // 表格相关
 const loading = ref(false)
-const sectionList = ref([])
+const questionList = ref([])
 
-// 获取节列表
-const fetchSectionList = async () => {
-  if (!selectedChapter.value) return
+// 添加对节选择变化的监听
+watch(selectedSection, () => {
+  currentPage.value = 1
+  fetchQuestionList()
+})
+
+// 获取题目列表
+const fetchQuestionList = async () => {
   loading.value = true
   try {
     const params = {
       page: currentPage.value,
       pageSize: pageSize.value,
-      cid: selectedChapter.value,
-      ...(searchQuery.value ? { name: searchQuery.value } : {})
+      cid: selectedChapter.value || undefined,
+      sid: selectedSection.value || undefined,
+      content: searchQuery.value || undefined
     }
-    const res = await getSectionList(params)
-    sectionList.value = res.rows.map(item => ({
-      id: item.sid,
+    const res = await getJudgeQuestionList(params)
+    questionList.value = res.rows.map(item => ({
+      id: item.qid,
+      title: item.content,
+      chapterId: item.cid,
+      sectionId: item.sid,
+      answer: item.key === 'A' ? '1' : '0',
+      chapterName: item.chapterName,
       sectionName: item.sectionName,
-      sort: item.pos
+      optionsList: item.optionsList
     }))
     total.value = res.total
   } catch (error) {
-    console.error('获取节列表失败:', error)
-    ElMessage.error('获取节列表失败')
+    console.error('获取题目列表失败:', error)
+    ElMessage.error('获取题目列表失败')
   } finally {
     loading.value = false
   }
 }
 
-// 处理章节切换
-const handleChapterChange = () => {
-  currentPage.value = 1
-  fetchSectionList()
-}
-
 // 表单相关
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
-const sectionFormRef = ref()
-const sectionForm = reactive({
+const questionFormRef = ref()
+const questionForm = reactive({
   id: '',
   chapterId: '',
-  sectionName: '',
-  sort: 1
+  sectionId: '',
+  title: '',
+  answer: ''
 })
-const sectionRules = {
+
+const questionRules = {
   chapterId: [
     { required: true, message: '请选择所属章', trigger: 'change' }
   ],
-  sectionName: [
-    { required: true, message: '请输入节名称', trigger: 'blur' },
-    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+  sectionId: [
+    { required: true, message: '请选择所属节', trigger: 'change' }
   ],
-  sort: [
-    { required: true, message: '请输入排序号', trigger: 'blur' }
+  title: [
+    { required: true, message: '请输入题目名称', trigger: 'blur' }
+  ],
+  answer: [
+    { required: true, message: '请选择正确答案', trigger: 'change' }
   ]
 }
 
-// 新增节
+// 新增题目
 const handleAdd = () => {
-  dialogTitle.value = '新增节'
-  sectionForm.id = ''
-  sectionForm.chapterId = selectedChapter.value
-  sectionForm.sectionName = ''
-  sectionForm.sort = sectionList.value.length + 1
+  dialogTitle.value = '新增题目'
+  Object.keys(questionForm).forEach(key => {
+    questionForm[key] = ''
+  })
   dialogVisible.value = true
 }
 
-// 编辑节
+// 编辑题目
 const handleEdit = (row) => {
-  dialogTitle.value = '编辑节'
-  sectionForm.id = row.id
-  sectionForm.chapterId = selectedChapter.value
-  sectionForm.sectionName = row.sectionName
-  sectionForm.sort = row.sort
+  dialogTitle.value = '编辑题目'
+  Object.assign(questionForm, {
+    id: row.id,
+    chapterId: row.chapterId,
+    sectionId: row.sectionId,
+    title: row.title,
+    answer: row.answer
+  })
+  // 获取编辑项的节列表
+  if (questionForm.chapterId) {
+    fetchSectionList(questionForm.chapterId)
+  }
   dialogVisible.value = true
 }
 
-// 删除节
+// 删除题目
 const handleDelete = (row) => {
   ElMessageBox.confirm(
-    '确认删除该节吗？',
+    '确认删除该题目吗？',
     '警告',
     {
       confirmButtonText: '确定',
@@ -279,12 +381,12 @@ const handleDelete = (row) => {
     }
   ).then(async () => {
     try {
-      // TODO: 调用删除接口
+      await deleteJudgeQuestion(row.id)
       ElMessage.success('删除成功')
-      if (sectionList.value.length === 1 && currentPage.value > 1) {
+      if (questionList.value.length === 1 && currentPage.value > 1) {
         currentPage.value--
       }
-      fetchSectionList()
+      fetchQuestionList()
     } catch (error) {
       console.error('删除失败:', error)
       ElMessage.error('删除失败')
@@ -294,22 +396,20 @@ const handleDelete = (row) => {
 
 // 提交表单
 const handleSubmit = () => {
-  sectionFormRef.value?.validate(async (valid) => {
+  questionFormRef.value?.validate(async (valid) => {
     if (valid) {
       try {
-        if (sectionForm.id) {
-          // TODO: 实现编辑功能
-        } else {
-          // 新增节
-          await addSection({
-            chapterId: sectionForm.chapterId,
-            sectionName: sectionForm.sectionName,
-            sort: sectionForm.sort
-          })
-          ElMessage.success('添加成功')
-        }
+        await addOrUpdateJudgeQuestion({
+          id: questionForm.id,
+          chapterId: questionForm.chapterId,
+          sectionId: questionForm.sectionId,
+          title: questionForm.title,
+          answer: questionForm.answer,
+          optionsList: questionForm.optionsList
+        })
+        ElMessage.success(questionForm.id ? '修改成功' : '添加成功')
         dialogVisible.value = false
-        fetchSectionList()
+        fetchQuestionList()
       } catch (error) {
         console.error('操作失败:', error)
         ElMessage.error('操作失败')
@@ -321,11 +421,12 @@ const handleSubmit = () => {
 // 初始化
 onMounted(() => {
   fetchChapterList()
+  fetchQuestionList()
 })
 </script>
 
 <style scoped>
-.section-container {
+.question-container {
   padding: 20px;
   background-color: #fff;
   border-radius: 4px;
@@ -344,8 +445,9 @@ onMounted(() => {
   align-items: center;
 }
 
-.chapter-select {
-  width: 200px;
+.chapter-select,
+.section-select {
+  width: 180px;
 }
 
 .search-input {

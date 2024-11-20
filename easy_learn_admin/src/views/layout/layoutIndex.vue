@@ -3,7 +3,6 @@
     <!-- 侧边菜单 -->
     <el-aside :width="isCollapse ? '64px' : '200px'" class="aside-container">
       <div class="logo-container">
-        <!-- <img src="@/assets/logo.png" alt="logo" class="logo-img" /> -->
         <span class="logo-text" v-show="!isCollapse">Easy Learn</span>
       </div>
       <el-menu
@@ -20,7 +19,7 @@
           <template #title >用户管理</template>
         </el-menu-item>
 
-        <el-sub-menu index="/directory">
+        <el-sub-menu index="directory">
           <template #title>
             <el-icon><folder /></el-icon>
             <span>目录管理</span>
@@ -29,7 +28,7 @@
           <el-menu-item index="/directory/section">节管理</el-menu-item>
         </el-sub-menu>
 
-        <el-sub-menu index="/questions">
+        <el-sub-menu index="questions">
           <template #title>
             <el-icon><document /></el-icon>
             <span>题目管理</span>
@@ -71,13 +70,16 @@
           </el-dropdown>
         </div>
       </el-header>
--
+
       <!-- 主要内容区域 -->
       <el-main class="main-container">
-        <router-view  v-slot="{ Component }">
-          <transition name="fade-transform" mode="out-in">
-            <component :is="Component" />
-          </transition>
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component
+            :is="Component"
+            :key="route.name"
+            v-if="Component" />
+          </keep-alive>
         </router-view>
       </el-main>
     </el-container>
@@ -90,6 +92,7 @@ import { useRoute } from 'vue-router'
 import { ArrowDown, User, Document, Folder, Expand, Fold } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { ElMessageBox } from 'element-plus'
 
 const isCollapse = ref(false)
 const route = useRoute()

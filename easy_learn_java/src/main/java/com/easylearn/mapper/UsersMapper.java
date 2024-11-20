@@ -2,6 +2,7 @@ package com.easylearn.mapper;
 
 import com.easylearn.pojo.entity.Users;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,9 +15,7 @@ import java.util.List;
 * @Entity com.easylearn.pojo.entity.Users
 */
 @Mapper
-public interface UsersMapper extends BaseMapper<Users> {
-
-    List<Users> findByRole(@Param("role") String role);
+public interface UsersMapper extends MPJBaseMapper<Users> {
 }
 
 

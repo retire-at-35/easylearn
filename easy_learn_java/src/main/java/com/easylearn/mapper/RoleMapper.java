@@ -2,6 +2,7 @@ package com.easylearn.mapper;
 
 import com.easylearn.pojo.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @Entity com.easylearn.pojo.entity.Role
 */
 @Mapper
-public interface RoleMapper extends BaseMapper<Role> {
+public interface RoleMapper extends MPJBaseMapper<Role> {
 
 }
 

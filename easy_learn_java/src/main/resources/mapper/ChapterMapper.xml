@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.easylearn.pojo.entity.Chapter">
             <id property="cid" column="cid" jdbcType="INTEGER"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="name" column="chapter_name" jdbcType="VARCHAR"/>
             <result property="pos" column="pos" jdbcType="INTEGER"/>
     </resultMap>
 

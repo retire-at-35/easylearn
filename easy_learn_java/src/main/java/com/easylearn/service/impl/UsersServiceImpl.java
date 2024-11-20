@@ -98,10 +98,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         return pageBean;
     }
 
-    @Override
-    public List<Users> findByRole(String role) {
-        return usersMapper.findByRole(role);
-    }
+
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
