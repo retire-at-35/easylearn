@@ -3,8 +3,10 @@ package com.easylearn.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easylearn.mapper.QuestionMapper;
 import com.easylearn.pojo.dto.PageBean;
 import com.easylearn.pojo.entity.Chapter;
+import com.easylearn.pojo.entity.Question;
 import com.easylearn.pojo.entity.Section;
 import com.easylearn.service.SectionService;
 import com.easylearn.mapper.SectionMapper;
@@ -23,6 +25,9 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
 
     @Resource
     private SectionMapper sectionMapper;
+
+    @Resource
+    private QuestionMapper questionMapper;
 
     @Override
     public PageBean pageSearch(Integer page, Integer pageSize, Integer cid, String name) {
@@ -51,6 +56,27 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
             throw new RuntimeException("题目位置有误，请检查");
         }
         sectionMapper.insert(section);
+    }
+
+    @Override
+    public void updateIfNotConflictSection(Section section) {
+        LambdaQueryWrapper<Section> sectionWrapper = new LambdaQueryWrapper<>();
+        sectionWrapper.eq(Section::getPos,section.getPos()).eq(Section::getCid,section.getCid());
+        Section s1 = sectionMapper.selectOne(sectionWrapper);
+        if(s1 != null){
+            throw new RuntimeException("题目位置有误，请检查");
+        }
+        sectionMapper.updateById(section);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        // 删除题目
+        LambdaQueryWrapper<Question> questionLambdaQueryWrapper = new LambdaQueryWrapper<Question>()
+                .eq(Question::getCid,id);
+        questionMapper.delete(questionLambdaQueryWrapper);
+        // 根据id删除
+        sectionMapper.deleteById(id);
     }
 }
 

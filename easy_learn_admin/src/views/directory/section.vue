@@ -142,7 +142,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { Search, Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAllChapter, getSectionList, addSection } from '@/api/section'
+import { getAllChapter, getSectionList, addSection, updateSection, deleteSection } from '@/api/section'
 
 // 章节选择相关
 const chapterList = ref([])
@@ -279,7 +279,7 @@ const handleDelete = (row) => {
     }
   ).then(async () => {
     try {
-      // TODO: 调用删除接口
+      await deleteSection(row.id)
       ElMessage.success('删除成功')
       if (sectionList.value.length === 1 && currentPage.value > 1) {
         currentPage.value--
@@ -298,7 +298,14 @@ const handleSubmit = () => {
     if (valid) {
       try {
         if (sectionForm.id) {
-          // TODO: 实现编辑功能
+          // 修改节
+          await updateSection({
+            id: sectionForm.id,
+            chapterId: sectionForm.chapterId,
+            sectionName: sectionForm.sectionName,
+            sort: sectionForm.sort
+          })
+          ElMessage.success('修改成功')
         } else {
           // 新增节
           await addSection({

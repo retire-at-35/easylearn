@@ -15,4 +15,8 @@ public interface SectionService extends IService<Section> {
     PageBean pageSearch(Integer page, Integer pageSize, Integer cid, String name);
 
     void addOne(Section section);
+
+    void updateIfNotConflictSection(Section section);
+
+    void deleteById(Integer id);
 }

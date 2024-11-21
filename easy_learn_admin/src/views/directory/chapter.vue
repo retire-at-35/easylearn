@@ -112,7 +112,7 @@
 import { ref, reactive } from 'vue'
 import { Search, Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getChapterList, addChapter } from '@/api/chapter'
+import { getChapterList, addChapter, updateChapter, deleteChapter } from '@/api/chapter'
 
 // 搜索相关
 const searchQuery = ref('')
@@ -213,7 +213,7 @@ const handleDelete = (row) => {
     }
   ).then(async () => {
     try {
-      // await deleteChapter(row.id)
+      await deleteChapter(row.id)
       ElMessage.success('删除成功')
       if (chapterList.value.length === 1 && currentPage.value > 1) {
         currentPage.value--
@@ -232,7 +232,13 @@ const handleSubmit = () => {
     if (valid) {
       try {
         if (chapterForm.id) {
-          // TODO: 实现编辑功能
+          // 修改章节
+          await updateChapter({
+            id: chapterForm.id,
+            chapterName: chapterForm.chapterName,
+            sort: chapterForm.sort
+          })
+          ElMessage.success('修改成功')
         } else {
           // 新增章节
           await addChapter({

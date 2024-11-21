@@ -19,4 +19,8 @@ public interface ChapterService extends IService<Chapter> {
     void addOne(Chapter chapter);
 
     List<Chapter> getAllChapter();
+
+    void updateIfNotConflict(Chapter chapter);
+
+    void deleteById(Integer id);
 }

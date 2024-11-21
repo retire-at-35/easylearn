@@ -3,14 +3,20 @@ package com.easylearn.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easylearn.mapper.QuestionMapper;
+import com.easylearn.mapper.SectionMapper;
 import com.easylearn.pojo.dto.ChapterPageDto;
 import com.easylearn.pojo.dto.PageBean;
 import com.easylearn.pojo.entity.Chapter;
+import com.easylearn.pojo.entity.Question;
+import com.easylearn.pojo.entity.Section;
 import com.easylearn.pojo.entity.Users;
 import com.easylearn.service.ChapterService;
 import com.easylearn.mapper.ChapterMapper;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -26,6 +32,12 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter>
 
     @Autowired
     private ChapterMapper chapterMapper;
+
+    @Autowired
+    private SectionMapper sectionMapper;
+
+    @Resource
+    private QuestionMapper questionMapper;
     @Override
     public PageBean getPage(ChapterPageDto pageDto) {
         if(pageDto.getPage()==null&&pageDto.getPageSize()==null){
@@ -38,10 +50,11 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter>
         if (StringUtils.hasText(pageDto.getName())) {
             chapterWrapper.like(Chapter::getChapterName, pageDto.getName());
         }
+        chapterWrapper.orderByAsc(Chapter::getPos);
         Page<Chapter> pageData = chapterMapper.selectPage(chapterPage, chapterWrapper);
         PageBean pageBean = new PageBean();
-        System.err.println(pageData.getRecords());
-        System.err.println(pageData.getTotal());
+//        System.err.println(pageData.getRecords());
+//        System.err.println(pageData.getTotal());
         pageBean.setRows(pageData.getRecords());
         pageBean.setTotal(pageData.getTotal());
         return pageBean;
@@ -65,6 +78,31 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter>
     @Override
     public List<Chapter> getAllChapter() {
         return chapterMapper.selectList(new LambdaQueryWrapper<Chapter>());
+    }
+
+    @Override
+    public void updateIfNotConflict(Chapter chapter) {
+        LambdaQueryWrapper<Chapter> posWrapper = new LambdaQueryWrapper<Chapter>().eq(Chapter::getPos, chapter.getPos());
+        Chapter c1 = chapterMapper.selectOne(posWrapper);
+        if(c1 != null){
+            throw new RuntimeException("请检查的章节次序");
+        }
+        chapterMapper.updateById(chapter);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Integer id) {
+        // 删除题目
+        LambdaQueryWrapper<Question> questionLambdaQueryWrapper = new LambdaQueryWrapper<Question>()
+                .eq(Question::getCid,id);
+        questionMapper.delete(questionLambdaQueryWrapper);
+        // 删除节
+        LambdaQueryWrapper<Section> sectionLambdaQueryWrapper = new LambdaQueryWrapper<Section>()
+                .eq(Section::getCid, id);
+        sectionMapper.delete(sectionLambdaQueryWrapper);
+        // 删除对应章
+        chapterMapper.deleteById(id);
     }
 }
 
