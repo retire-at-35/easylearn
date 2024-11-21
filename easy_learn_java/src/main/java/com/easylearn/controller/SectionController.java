@@ -10,6 +10,8 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/common/section")
 public class SectionController {
@@ -38,5 +40,11 @@ public class SectionController {
     public Result addSection(@RequestBody Section section){
         sectionService.addOne(section);
         return Result.success("添加成功");
+    }
+
+    @GetMapping("/getSectionByCid")
+    public Result getSectionByCid(Integer id){
+        List<Section> list = sectionService.getSectionByCid(id);
+        return Result.success(list);
     }
 }

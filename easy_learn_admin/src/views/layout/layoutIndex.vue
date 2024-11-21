@@ -29,15 +29,15 @@
           <el-menu-item index="/directory/section">节管理</el-menu-item>
         </el-sub-menu>
 
-        <el-sub-menu index="/questions">
-          <template #title>
-            <el-icon><document /></el-icon>
-            <span>题目管理</span>
-          </template>
-          <el-menu-item index="/questions/single">单选题管理</el-menu-item>
-          <el-menu-item index="/questions/multiple">多选题管理</el-menu-item>
-          <el-menu-item index="/questions/judge">判断题管理</el-menu-item>
-        </el-sub-menu>
+        <el-menu-item index="/type">
+          <el-icon><List /></el-icon>
+          <template #title>类型管理</template>
+        </el-menu-item>
+
+        <el-menu-item index="/question">
+          <el-icon><Document /></el-icon>
+          <template #title>题目管理</template>
+        </el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -87,7 +87,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ArrowDown, User, Document, Folder, Expand, Fold } from '@element-plus/icons-vue'
+import { ArrowDown, User, Document, Folder, Expand, Fold, List } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 

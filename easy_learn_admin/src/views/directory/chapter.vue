@@ -152,7 +152,7 @@ const fetchChapterList = async () => {
     // 由于后端返回的字段名与前端不同，需要转换一下
     chapterList.value = res.rows.map(item => ({
       id: item.cid,
-      chapterName: item.name,
+      chapterName: item.chapterName,
       sort: item.pos
     }))
     total.value = res.total

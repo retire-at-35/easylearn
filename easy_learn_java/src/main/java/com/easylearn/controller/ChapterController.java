@@ -8,6 +8,8 @@ import com.easylearn.service.ChapterService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/common/chapter")
 public class ChapterController {
@@ -27,5 +29,11 @@ public class ChapterController {
         return Result.success("增加成功");
     }
 
+    @GetMapping("/getAllChapter")
+    public Result getAllChapter()
+    {
+        List<Chapter> allChapter = chapterService.getAllChapter();
+        return Result.success(allChapter);
+    }
 
 }

@@ -154,7 +154,7 @@ const fetchChapterList = async () => {
     const res = await getAllChapter()
     chapterList.value = res.map(item => ({
       id: item.cid,
-      chapterName: item.name,
+      chapterName: item.chapterName,
       sort: item.pos
     }))
     if (chapterList.value.length > 0 && !selectedChapter.value) {
@@ -206,7 +206,7 @@ const fetchSectionList = async () => {
     const res = await getSectionList(params)
     sectionList.value = res.rows.map(item => ({
       id: item.sid,
-      sectionName: item.name,
+      sectionName: item.sectionName,
       sort: item.pos
     }))
     total.value = res.total

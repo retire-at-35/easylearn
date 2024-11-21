@@ -37,6 +37,22 @@ const router = createRouter({
           meta: {
             title: '节管理'
           }
+        },
+        {
+          path: 'type',
+          name: 'type',
+          component: () => import('@/views/type/index.vue'),
+          meta: {
+            title: '类型管理'
+          }
+        },
+        {
+          path: 'question',
+          name: 'question',
+          component: () => import('@/views/question/index.vue'),
+          meta: {
+            title: '题目管理'
+          }
         }
       ]
     }
