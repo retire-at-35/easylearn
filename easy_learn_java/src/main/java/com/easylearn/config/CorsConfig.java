@@ -12,20 +12,20 @@ import java.io.IOException;
 @Slf4j
 public class CorsConfig implements Filter {
 
-    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        //log.error("我被注入啦！");
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");//不可以传*
+        HttpServletRequest request = (HttpServletRequest) req;
+        // 获取请求的来源
+        String origin = request.getHeader("Origin");
+        // 校验来源是否在允许的列表中
+        if ("http://localhost:5173".equals(origin) || "http://localhost:8081".equals(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        }
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "access-control-allow-origin, authority, content-type, version-info, X-Requested-With");
-        response.setHeader("Access-Control-Allow-Credentials", "true");//这行是关键
-        HttpServletRequest request = (HttpServletRequest)req;
-//        if ("OPTIONS".equals(request.getMethod())) {
-//            response.setStatus(HttpServletResponse.SC_OK);//解决预处理
-//            return;
-//        }
+        response.setHeader("Access-Control-Allow-Credentials", "true"); // 允许携带Cookie等凭证
+
         chain.doFilter(req, res);
     }
     @Override

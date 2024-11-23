@@ -1,7 +1,7 @@
 package com.easylearn.service.impl;
 import com.easylearn.constant.Constant;
 import com.easylearn.pojo.dto.UserDto;
-import com.easylearn.pojo.entity.MyUserDetails;
+import com.easylearn.pojo.entity.AdminUserDetails;
 import com.easylearn.pojo.entity.Users;
 import com.easylearn.service.LoginService;
 import jakarta.annotation.Resource;
@@ -28,13 +28,13 @@ public class LoginServiceImpl implements LoginService {
         }
         UsernamePasswordAuthenticationToken uToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication auth = manager.authenticate(uToken);
-        MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
+        AdminUserDetails adminUserDetails = (AdminUserDetails) auth.getPrincipal();
         //使用session保存登录状态,注意改变跨域设置，使能够在前后端分离的项目中使用 sesssion
         //同时axios使用Credentials=true属性
         SecurityContextHolder.getContext().setAuthentication(auth);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(myUserDetails,userDto);
+        BeanUtils.copyProperties(adminUserDetails,userDto);
         return userDto;
     }
 }
