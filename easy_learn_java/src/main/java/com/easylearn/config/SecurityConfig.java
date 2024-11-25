@@ -1,6 +1,6 @@
 package com.easylearn.config;
 
-import com.easylearn.service.impl.MyUserDetailsService;
+import com.easylearn.service.impl.AdminUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,21 +15,21 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 public class SecurityConfig {
 
-    private final MyUserDetailsService myUserDetailsService;
+    private final AdminUserDetailsService adminUserDetailsService;
 
-    public SecurityConfig(MyUserDetailsService myUserDetailsService) {
-        this.myUserDetailsService = myUserDetailsService;
+
+
+    public SecurityConfig(AdminUserDetailsService adminUserDetailsService) {
+        this.adminUserDetailsService = adminUserDetailsService;
     }
 
     @Bean
     AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
-        dao.setUserDetailsService(myUserDetailsService);
+        dao.setUserDetailsService(adminUserDetailsService);
         dao.setPasswordEncoder(bCryptPasswordEncoder());
         return new ProviderManager(dao);
     }
@@ -42,22 +42,26 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 允许的前端域名
+        // 允许的前端域名
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "http://localhost:8081"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
-        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
     //授权
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> {
             //所以有指定的请求，包括其子路径可以访问
-            auth.requestMatchers("/pub/**", "images/**").permitAll()
+            auth.requestMatchers("/pub/**", "images/**","/app/**").permitAll()
                     .requestMatchers("/common/**").hasAnyRole("superadmin", "admin")
                     .requestMatchers("/super/**").hasRole("superadmin")
                     .anyRequest().authenticated();//任何其他请求都需要验证

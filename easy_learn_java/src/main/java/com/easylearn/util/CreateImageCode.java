@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class CreateImageCode {
     // 图片的宽度。
-    private int width = 160;
+    private int width = 150;
     // 图片的高度。
     private int height = 40;
     // 验证码字符个数

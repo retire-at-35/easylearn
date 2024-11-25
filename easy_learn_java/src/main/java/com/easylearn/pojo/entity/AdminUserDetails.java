@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MyUserDetails extends Users implements UserDetails {
+public class AdminUserDetails extends Users implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
