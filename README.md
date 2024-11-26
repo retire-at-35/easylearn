@@ -1,1 +1,5 @@
 # easylearn
+springboot+vue3+uniapp开发的刷题软件
+可以拉去做课程设计或者作为毕业设计的基础
+管理端组件框架使用到element
+后端主要就是springSecurity和redis两个要点
