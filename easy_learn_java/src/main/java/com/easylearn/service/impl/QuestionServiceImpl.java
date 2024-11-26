@@ -152,7 +152,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         else {
             entries = (HashMap<Integer, Question>) redisTemplate.opsForHash().entries(Constant.JUDGE_QUESTION_identifier);
         }
-        if(entries!=null){
+        if(!entries.isEmpty()){
             return entries;
         }
         MPJLambdaWrapper<Question> wrapper = new MPJLambdaWrapper<>();

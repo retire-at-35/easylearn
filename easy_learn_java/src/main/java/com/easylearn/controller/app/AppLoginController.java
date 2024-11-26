@@ -29,6 +29,8 @@ public class AppLoginController {
     @Resource
     private AppUserService appUserService;
 
+
+
     @Autowired
     private JwtProperties jwtProperties;
 

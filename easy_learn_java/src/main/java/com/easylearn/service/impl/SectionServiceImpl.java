@@ -3,6 +3,7 @@ package com.easylearn.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easylearn.constant.Constant;
 import com.easylearn.mapper.QuestionMapper;
 import com.easylearn.pojo.dto.PageBean;
 import com.easylearn.pojo.entity.Chapter;
@@ -11,6 +12,8 @@ import com.easylearn.pojo.entity.Section;
 import com.easylearn.service.SectionService;
 import com.easylearn.mapper.SectionMapper;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -23,6 +26,9 @@ import org.springframework.util.StringUtils;
 public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
     implements SectionService{
 
+
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Resource
     private SectionMapper sectionMapper;
 
@@ -56,6 +62,7 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
             throw new RuntimeException("题目位置有误，请检查");
         }
         sectionMapper.insert(section);
+        cleanCache();
     }
 
     @Override
@@ -67,6 +74,7 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
             throw new RuntimeException("题目位置有误，请检查");
         }
         sectionMapper.updateById(section);
+        cleanCache();
     }
 
     @Override
@@ -77,6 +85,13 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section>
         questionMapper.delete(questionLambdaQueryWrapper);
         // 根据id删除
         sectionMapper.deleteById(id);
+        cleanCache();
+    }
+
+    void cleanCache(){
+        redisTemplate.opsForHash().delete(Constant.SINGLE_QUESTION_identifier);
+        redisTemplate.opsForHash().delete(Constant.MULTIPLE_QUESTION_identifier);
+        redisTemplate.opsForHash().delete(Constant.JUDGE_QUESTION_identifier);
     }
 }
 

@@ -23,6 +23,12 @@
 			"style": {
 				"navigationBarTitleText": "修改密码"
 			}
+		},
+		{
+			"path": "pages/exam/index",
+			"style": {
+				"navigationBarTitleText": "答题"
+			}
 		}
 	],
 	"globalStyle": {
