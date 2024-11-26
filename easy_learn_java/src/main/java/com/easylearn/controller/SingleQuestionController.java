@@ -34,7 +34,7 @@ public class SingleQuestionController {
 
     @DeleteMapping("/deleteSingleQuestion")
     public Result deleteById(Integer id){
-        questionService.deleteById(id);
+        questionService.deleteById(id,Constant.SINGLE_QUESTION_TYPE);
         return Result.success("删除成功");
     }
 }

@@ -5,6 +5,10 @@ import com.easylearn.pojo.dto.QuestionDto;
 import com.easylearn.pojo.entity.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
 * @author 31696
 * @description 针对表【question】的数据库操作Service
@@ -17,6 +21,8 @@ public interface QuestionService extends IService<Question> {
 
     void addQuestion(QuestionDto questionDto, Integer type);
 
-    void deleteById(Integer id);
+    void deleteById(Integer id,Integer type);
+
+    public Map<Integer,Question> getAllQuestionByType(Integer type);
 
 }

@@ -16,12 +16,16 @@ import com.github.yulichang.query.MPJLambdaQueryWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +37,8 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     implements QuestionService{
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Resource
     private QuestionMapper questionMapper;
@@ -104,15 +110,81 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             options.setQid(question.getQid());
             optionsMapper.insertOrUpdate(options);
         }
+        // 添加redis缓存
+        if(type == Constant.SINGLE_QUESTION_TYPE){
+            redisTemplate.opsForHash().put(Constant.SINGLE_QUESTION_identifier,question.getQid(),question);
+        }
+        else if(type == Constant.MULTIPLE_QUESTION_TYPE){
+            redisTemplate.opsForHash().put(Constant.MULTIPLE_QUESTION_identifier,question.getQid(),question);
+        }
+        else if(type == Constant.JUDGE_QUESTION_TYPE){
+            redisTemplate.opsForHash().put(Constant.JUDGE_QUESTION_identifier,question.getQid(),question);
+        }
     }
 
     @Override
     @Transactional
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id,Integer type) {
         questionMapper.deleteById(id);
         LambdaQueryWrapper<Options> wrapper = new LambdaQueryWrapper<Options>().eq(Options::getQid,id);
         optionsMapper.delete(wrapper);
+        // 删除redis缓存
+        if(type == Constant.SINGLE_QUESTION_TYPE){
+            redisTemplate.opsForHash().delete(Constant.SINGLE_QUESTION_identifier,id);
+        }
+        else if(type == Constant.MULTIPLE_QUESTION_TYPE){
+            redisTemplate.opsForHash().delete(Constant.MULTIPLE_QUESTION_identifier,id);
+        }
+        else if(type == Constant.JUDGE_QUESTION_TYPE){
+            redisTemplate.opsForHash().delete(Constant.JUDGE_QUESTION_identifier,id);
+        }
     }
+
+
+    public Map<Integer,Question> getAllQuestionByType(Integer type){
+        Map<Integer, Question> entries;
+        if(type == Constant.SINGLE_QUESTION_TYPE){
+            entries = (HashMap<Integer, Question>) redisTemplate.opsForHash().entries(Constant.SINGLE_QUESTION_identifier);
+        }
+        else if(type == Constant.MULTIPLE_QUESTION_TYPE){
+            entries = (HashMap<Integer, Question>) redisTemplate.opsForHash().entries(Constant.MULTIPLE_QUESTION_identifier);
+        }
+        else {
+            entries = (HashMap<Integer, Question>) redisTemplate.opsForHash().entries(Constant.JUDGE_QUESTION_identifier);
+        }
+        if(entries!=null){
+            return entries;
+        }
+        MPJLambdaWrapper<Question> wrapper = new MPJLambdaWrapper<>();
+        wrapper.selectAll(Question.class,Question::getChapterName,Question::getSectionName,Question::getOptionsList)
+                .selectAll(Chapter.class)
+                .select(Section::getSectionName)
+                .innerJoin(Chapter.class,Chapter::getCid,Question::getCid)
+                .innerJoin(Section.class,Section::getSid,Question::getSid);
+        wrapper.eq(Question::getTid,type);
+        List<Question> questions = questionMapper.selectJoinList(wrapper);
+        List<Integer> qidList = questions.stream().map(item -> item.getQid()).collect(Collectors.toList());
+        LambdaQueryWrapper<Options> opWrapper = new LambdaQueryWrapper<>();
+        opWrapper.in(Options::getQid,qidList);
+        List<Options> options = optionsMapper.selectList(opWrapper);
+        for (Question q : questions) {
+            ArrayList<Options> optionList = new ArrayList<>();
+            for (Options option : options) {
+                if(q.getQid() == option.getQid())
+                {
+                    optionList.add(option);
+                }
+            }
+            q.setOptionsList(optionList);
+        }
+        Map<Integer, Question> questionMap = questions.stream().collect(Collectors.toMap(
+                Question::getQid,
+                question -> question
+        ));
+        redisTemplate.opsForHash().putAll(Constant.SINGLE_QUESTION_identifier,questionMap);
+        return questionMap;
+    }
+
 
 
 

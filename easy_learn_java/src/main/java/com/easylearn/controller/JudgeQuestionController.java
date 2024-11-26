@@ -33,7 +33,7 @@ public class JudgeQuestionController {
 
     @DeleteMapping("/deleteJudgeQuestion")
     public Result deleteById(Integer id){
-        questionService.deleteById(id);
+        questionService.deleteById(id,Constant.JUDGE_QUESTION_TYPE);
         return Result.success("删除成功");
     }
 }

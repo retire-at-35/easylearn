@@ -33,7 +33,7 @@ public class MultipleQuestionController {
 
     @DeleteMapping("/deleteMultipleQuestion")
     public Result deleteById(Integer id){
-        questionService.deleteById(id);
+        questionService.deleteById(id,Constant.MULTIPLE_QUESTION_TYPE);
         return Result.success("删除成功");
     }
 }
