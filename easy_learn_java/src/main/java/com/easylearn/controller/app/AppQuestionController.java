@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,5 +22,11 @@ public class AppQuestionController {
     public Result getAllQuestionByType(Integer type){
         Map<Integer, Question> questionMap = questionService.getAllQuestionByType(type);
         return Result.success(questionMap);
+    }
+
+    @GetMapping("/generateExam")
+    public Result generateExam(){
+        List<Question> list = questionService.generateExam();
+        return Result.success(list);
     }
 }

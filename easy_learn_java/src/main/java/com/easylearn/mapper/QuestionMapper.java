@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
 * @author 31696
@@ -14,6 +17,8 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface QuestionMapper extends MPJBaseMapper<Question> {
+    @Select("SELECT * FROM tk.question ORDER BY RAND() LIMIT #{limit}")
+    List<Question> getRandomQuestions(int limit);
 
 //    Page<Question> pageQuery(Integer cid, Integer sid, String content, Integer singleQuestionType);
 }

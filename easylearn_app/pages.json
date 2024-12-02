@@ -29,6 +29,12 @@
 			"style": {
 				"navigationBarTitleText": "答题"
 			}
+		},
+		{
+			"path": "pages/mock-exam/index",
+			"style": {
+				"navigationBarTitleText": "模拟考试"
+			}
 		}
 	],
 	"globalStyle": {

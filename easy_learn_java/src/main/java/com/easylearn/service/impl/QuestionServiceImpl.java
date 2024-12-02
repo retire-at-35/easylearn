@@ -185,7 +185,26 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         return questionMap;
     }
 
-
+    // 生成试卷
+    @Override
+    public List<Question> generateExam() {
+        List<Question> questions = questionMapper.getRandomQuestions(15);
+        List<Integer> qidList = questions.stream().map(item -> item.getQid()).collect(Collectors.toList());
+        LambdaQueryWrapper<Options> opWrapper = new LambdaQueryWrapper<>();
+        opWrapper.in(Options::getQid,qidList);
+        List<Options> options = optionsMapper.selectList(opWrapper);
+        for (Question q : questions) {
+            ArrayList<Options> optionList = new ArrayList<>();
+            for (Options option : options) {
+                if(q.getQid() == option.getQid())
+                {
+                    optionList.add(option);
+                }
+            }
+            q.setOptionsList(optionList);
+        }
+        return  questions;
+    }
 
 
 }

@@ -66,12 +66,10 @@ public class SecurityConfig {
                     .requestMatchers("/super/**").hasRole("superadmin")
                     .anyRequest().authenticated();//任何其他请求都需要验证
         });
-
         //允许前端post方式提交
         http.csrf(c -> c.disable());
         // 配置cors
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-        
         //返回构建的对象
         return http.build();
     }

@@ -25,4 +25,5 @@ public interface QuestionService extends IService<Question> {
 
     public Map<Integer,Question> getAllQuestionByType(Integer type);
 
+    List<Question> generateExam();
 }

@@ -2,6 +2,17 @@
   <view class="index-container">
     <!-- 题型选择区域 -->
     <view class="question-types">
+      <!-- 模拟考试 -->
+      <view class="type-item" @tap="goToMockExam">
+        <view class="type-icon">
+          <text class="iconfont icon-exam"></text>
+        </view>
+        <view class="type-info">
+          <text class="type-name">模拟考试</text>
+          <text class="type-desc">点击进入考试</text>
+        </view>
+      </view>
+      
       <!-- 单选题 -->
       <view class="type-item" @tap="goToExam(1)">
         <view class="type-icon">
@@ -45,6 +56,13 @@ import { onMounted } from 'vue'
 const goToExam = (type) => {
   uni.navigateTo({
     url: `/pages/exam/index?type=${type}`
+  })
+}
+
+// 跳转到模拟考试页面
+const goToMockExam = () => {
+  uni.navigateTo({
+    url: '/pages/mock-exam/index'
   })
 }
 

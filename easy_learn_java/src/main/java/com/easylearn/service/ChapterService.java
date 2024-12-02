@@ -6,7 +6,6 @@ import com.easylearn.pojo.entity.Chapter;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
-
 /**
 * @author 31696
 * @description 针对表【chapter】的数据库操作Service
